@@ -1,0 +1,27 @@
+{
+  "name": "telegram-bot",
+  "version": "0.0.1",
+  "description": "Pet customizable Telegram bot with some functions",
+  "engines": {
+    "node": "7.x",
+    "npm": ">=4.5.0"
+  },
+  "main": "./index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "mocha ./test/*.test.js"
+  },
+  "keywords": [
+    "telegram",
+    "telegram bot",
+    "chatbot"
+  ],
+  "author": "kilych",
+  "license": "MIT",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.27.1"
+  },
+  "devDependencies": {
+    "mocha": "3.4.2"
+  }
+}

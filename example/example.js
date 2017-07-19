@@ -14,12 +14,12 @@ module.exports = (token, options) => {
             from: {
               type: 'string',
               pred: value => /\b([a-z]{3})\b/i.test(value),
-              requestText: 'Please send currency (three letter code)'
+              requestText: 'Please send "from" currency (three letter code)'
             },
             to: {
               type: 'string',
               pred: value => /\b([a-z]{3})\b/i.test(value),
-              requestText: 'Please send currency (three letter code)'
+              requestText: 'Please send "to" currency (three letter code)'
             },
             amount: {
               type: 'number',

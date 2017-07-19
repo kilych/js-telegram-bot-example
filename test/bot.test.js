@@ -4,7 +4,7 @@ const assert = require('assert');
 const userProt = require('../src/user-prototype.js');
 const bot = require('../src/make-bot.js')();
 
-describe('/help command test', () => {
+describe('TEST: bot /help command', () => {
   let user = Object.create(userProt).init(bot.actions);
   let respText = '';
   const expectedText =
@@ -21,7 +21,7 @@ describe('/help command test', () => {
   });
 });
 
-describe('/exit command test', () => {
+describe('TEST: bot /exit command', () => {
   let user = Object.create(userProt).init(bot.actions);
   let respText = '';
 
@@ -33,13 +33,7 @@ describe('/exit command test', () => {
   });
 });
 
-// describe('Handling text message test', () => {
-//   let user = Object.create(userProt).init(bot.actions);
-//   let respText = '';
-
-// });
-
-describe('getWords method test', () => {
+describe('TEST: user prototype getWords method', () => {
   const user = Object.create(userProt).init();
 
   it('should set words props to empty array', () => {

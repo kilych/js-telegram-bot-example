@@ -22,7 +22,6 @@ module.exports = {
   },
 
   handleMsg(msg) {
-    console.log('new message');
     let state = '';
 
     this.chatId = msg.chat.id;
@@ -32,7 +31,7 @@ module.exports = {
 
       this.getWords();
       this.checkGlobalCommand();
-      console.log('state stack: ' + this.state.stack.join(', '));
+      console.log('new message, state stack: ' + this.state.stack.join(', '));
 
       if (this.state.isEmpty()) this.state.push('handleName');
     }
@@ -47,6 +46,7 @@ module.exports = {
     }
   },
 
+  // loses info about whitespace/underscore difference
   getWords() {
     this.words = this.text
       .split(/[\s_]/)

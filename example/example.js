@@ -27,24 +27,19 @@ module.exports = (token, options) => {
               requestText: 'Please send amount (number)'
             }
           },
-          (params, onResult) => {
+          (params, onResult, onError) => {
             const amount = Number(params.amount);
             const fromto = params.from + params.to;
-            if (amount === 0) onResult(amount + ' ' + params.from + ' is '
-                                       + amount + ' ' + params.to);
+            if (amount === 0) onResult(`${amount} ${params.from} is ${amount} ${params.to}`);
             // else if ()
             else {
-            api.getCurrencyRate(fromto)
-              .then(rate => {
-                const converted = amount * Number(rate);
-                const resp = params.amount + ' ' + params.from + ' is '
-                      + converted + ' ' + params.to;
-                onResult(resp);
-              },
-                    err => {
-                      console.log('convert/currency error: ' + err.message);
-                      onResult('Something is bad.');
-                    });
+              api.getCurrencyRate(fromto).then(
+                rate => {
+                  const converted = amount * Number(rate);
+                  const resp = `${params.amount} ${params.from} is ${converted} ${params.to}`;
+                  onResult(resp);
+                },
+                onError);
             }
             return;
           });

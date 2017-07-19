@@ -160,11 +160,18 @@ module.exports = {
     this.sendMsg(resp);
   },
 
+  onTextResult(text) { this.sendMsg(text); },
+
+  onError(err) {
+    console.log(`#########\n${err.message}\n#########`);
+    this.sendMsg('Something is bad.');
+},
+
   sendMsg(text) { this.api.sendMessage(this.chatId, text); },
 
   apply() {
     const func = tree.get(this.actions.functions, this.path);
-    func(this.values, this.sendMsg.bind(this));
+    func(this.values, this.onTextResult.bind(this), this.onError.bind(this));
     this.clean();
   },
 

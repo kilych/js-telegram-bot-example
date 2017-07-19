@@ -40,7 +40,7 @@ module.exports = {
 
     this.state.enableUpdating();
 
-    while (state = this.state.update()) {
+    while (state = this.state.updateNoRun()) {
       console.log(state);
       this[state]();
     }

@@ -36,17 +36,19 @@ module.exports = {
 	update() {
 		const state = this.get();
 		if (!this.updatingEnabled || state === false) return false;
-    switch (typeof state) {
-      case 'string':
-      return state;
+    if (typeof state !== 'function') {
+      throw new Error(`in function update: Unexpected type of state: \
+expected function, but ${typeof state} given.`);
+    }
+    state();
+    return true;
+	},
 
-      case 'function':
-			state();
-			return true;
-
-      default: throw new Error('Unexpected type of state: ' + typeof state
-                               + '. Expected function or string.');
-		}
+  // maybe just get???
+	updateNoRun() {
+		const state = this.get();
+		if (this.updatingEnabled && state !== false) return state;
+    return false;
 	},
 
 	enableUpdating() {

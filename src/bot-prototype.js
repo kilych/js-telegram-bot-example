@@ -54,7 +54,7 @@ module.exports = {
     this.api = new API(this.token, {polling: true});
 
     this.api.on('message', msg => {
-      console.log('>>>\n' + JSON.stringify(msg, null, 2) + '\n<<<');
+      // console.log('>>>\n' + JSON.stringify(msg, null, 2) + '\n<<<');
       let user = {};
       const userId = msg.from.id;
 

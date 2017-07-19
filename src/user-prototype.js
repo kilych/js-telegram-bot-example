@@ -15,13 +15,14 @@ module.exports = {
   },
 
   clean() {
-    this.path = '';
+    this.path = '';             // namespace or action
     this.param = '';
     this.values = {};
     this.state.clean();
   },
 
   handleMsg(msg) {
+    // console.log(`stack on new message: ${this.state.stack.join(', ')}`);
     let state = '';
 
     this.chatId = msg.chat.id;
@@ -31,7 +32,6 @@ module.exports = {
 
       this.getWords();
       this.checkGlobalCommand();
-      console.log('new message, state stack: ' + this.state.stack.join(', '));
 
       if (this.state.isEmpty()) this.state.push('handleName');
     }
@@ -41,7 +41,7 @@ module.exports = {
     this.state.enableUpdating();
 
     while (state = this.state.updateNoRun()) {
-      console.log(state);
+      // console.log(state);
       this[state]();
     }
   },
@@ -92,6 +92,7 @@ module.exports = {
 
   isGlobal(word) { return tree.get(this.actions.functions, word); },
 
+  // namespace or action
   isName(path) { return tree.get(this.actions.functions, path); },
 
   isFunction(path) {
@@ -134,8 +135,13 @@ module.exports = {
 
   handleValue() {
     const value = this.words[0];
+    const needRaw = tree.get(this.actions.params, `${this.path}/${this.param}/needRawText`);
 
-    if (!this.noWords() && this.isValue(value)) {
+    if (!this.noWords() && this.isValue(value) && needRaw) {
+      const rest = this.words.join(' ');
+      this.words = [];
+      this.values[this.param] = rest;
+    } else if (!this.noWords() && this.isValue(value)) {
       this.words.shift();
       this.values[this.param] = value;
     }
@@ -151,7 +157,10 @@ module.exports = {
   requestValue() {
     let resp = '';
     const params = tree.get(this.actions.params, this.path);
-    const key = tree.someKey(params, '', key => !this.values.hasOwnProperty(key));
+    const isFilled = key => this.values.hasOwnProperty(key);
+    const needRaw = key => tree.get(this.actions.params, `${this.path}/key/needRawText`);
+    const key = tree.someKey(params, '', key => !isFilled(key) && !needRaw(key))
+          || tree.someKey(params, '', key => !isFilled(key));
     if (key) {
       this.param = key;
       resp = params[key].requestText;
@@ -165,7 +174,7 @@ module.exports = {
   onError(err) {
     console.log(`#########\n${err.message}\n#########`);
     this.sendMsg('Something is bad.');
-},
+  },
 
   sendMsg(text) { this.api.sendMessage(this.chatId, text); },
 

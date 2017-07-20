@@ -5,7 +5,7 @@ const makeBot = require(path.dirname(__dirname) + '/src/make-bot.js');
 const api = require(__dirname + '/lib/external-api.js');
 
 module.exports = (token, options) => {
-  let bot = makeBot(token);
+  const bot = makeBot(token);
 
   bot.add('remind',
           'Set reminder with message'

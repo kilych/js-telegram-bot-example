@@ -10,7 +10,7 @@ const bot = require('../src/make-bot.js')();
           {
             time: {
               type: 'string',
-              pred: value => /\d\dh\d\dm\d\ds/.test(value),
+              pred: str => /^(\d?\dh)?(\d?\dm)?(\d?\ds)?$/.test(str),
               requestText: 'Please send time interval (Example: /00h00m03s)'
             },
             message: {
@@ -22,8 +22,11 @@ const bot = require('../src/make-bot.js')();
           },
           (values, onResult, onError) => {
             const resp = `REMINDER: ${values.message}`;
-            const timeArr = values.time.split(/[hms]/).map(Number);
-            const ms = (3600 * timeArr[0] + 60 * timeArr[1] + timeArr[2]) * 1000;
+            const match = /^((\d?\d)h)?((\d?\d)m)?((\d?\d)s)?$/.exec(values.time);
+            const hours = Number(match[2]) || 0;
+            const mins = Number(match[4]) || 0;
+            const secs = Number(match[6]) || 0;
+            const ms = (3600 * hours + 60 * mins + secs) * 1000;
             setTimeout(() => { onResult(resp); }, ms);
             onResult('REMINDER set.');
             return;
@@ -87,7 +90,7 @@ describe('TEST: bot dialog handling (via remind action)', () => {
   it('should request reminder message', () => {
     let respText = '';
     user.sendMsg = text => { respText = text; }
-    user.handleMsg({text: '00h00m02s', from: {}, chat: {}});
+    user.handleMsg({text: '00h2s', from: {}, chat: {}});
     assert.equal(respText, 'Please send reminder message');
   });
 
@@ -128,7 +131,7 @@ describe('TEST: bot dialog handling (via remind action)', () => {
   it('should say that reminder set', () => {
     let respText = '';
     user.onTextResult = text => { respText = text; };
-    user.handleMsg({text: '/remind_time_00h00m01s_message_some_crap', from: {}, chat: {}});
+    user.handleMsg({text: '/remind_time_1s_message_some_crap', from: {}, chat: {}});
     assert.equal(respText, 'REMINDER set.')
   });
 });

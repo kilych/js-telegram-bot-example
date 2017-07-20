@@ -13,7 +13,7 @@ module.exports = (token, options) => {
           {
             time: {
               type: 'string',
-              pred: value => /\d\dh\d\dm\d\ds/.test(value),
+              pred: str => /^(\d?\dh)?(\d?\dm)?(\d?\ds)?$/.test(str),
               requestText: 'Please send time interval (Example: /00h00m03s)'
             },
             message: {
@@ -25,8 +25,11 @@ module.exports = (token, options) => {
           },
           (values, onResult, onError) => {
             const resp = `REMINDER: ${values.message}`;
-            const timeArr = values.time.split(/[hms]/).map(Number);
-            const ms = (3600 * timeArr[0] + 60 * timeArr[1] + timeArr[2]) * 1000;
+            const match = /^((\d?\d)h)?((\d?\d)m)?((\d?\d)s)?$/.exec(values.time);
+            const hours = Number(match[2]) || 0;
+            const mins = Number(match[4]) || 0;
+            const secs = Number(match[6]) || 0;
+            const ms = (3600 * hours + 60 * mins + secs) * 1000;
             setTimeout(() => { onResult(resp); }, ms);
             onResult('REMINDER set.');
             return;

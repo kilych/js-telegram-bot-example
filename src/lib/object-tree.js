@@ -52,34 +52,51 @@ function isEmpty(tree, path) {
 
 function someKey(tree, path = '', pred = key => true) {
   const node = get(tree, path);
-    if (node && typeof(node) === 'object') {
-      for (let key in node) {
-        if (node.hasOwnProperty(key) && pred(key)) return key;
-      }
+  if (node && typeof(node) === 'object') {
+    for (let key in node) {
+      if (node.hasOwnProperty(key) && pred(key)) return key;
     }
+  }
   return false;
 }
 
-function map(tree, path, func) {
+function map(tree, path, func = (key, value) => value) {
   const node = get(tree, path);
   let res = {};
-  if (node && typeof(node) === 'object') {
+  if (node && typeof node === 'object' && node != null) {
     for (let key in node) {
-      if (node.hasOwnProperty(key)) res[key] = func(node[key]);
+      if (node.hasOwnProperty(key)) res[key] = func(key, node[key]);
     }
     return res;
   }
   return false;
 }
 
-function reduce(tree, path, init, func) {
-  const node = get(tree, path);
-  let res = init;
-  if (node && typeof(node) === 'object') {
+function reduce(node, initKey, initValue, op) {
+  let res = initValue;
+  if (node == null) {
+    // Nothing to do
+  } else if (typeof node === 'object') {
     for (let key in node) {
-      if (node.hasOwnProperty(key) && node[key] != null) res = func(res, node[key]);
+      if (node.hasOwnProperty(key)) {
+        res = op(initKey, res, key, reduce(node[key], key, initValue, op));
+      }
     }
-  }
+  } else res = node;
+  return res;
+}
+
+function flatten(node, parentKey, uniquify) {
+  let res = {};
+  if (node == null) {
+    // Nothing to do
+  } else if (typeof node === 'object') {
+    for (let key in node) {
+      if (node.hasOwnProperty(key)) {
+        res = Object.assign(res, flatten(node[key], uniquify(parentKey, key), uniquify));
+      }
+    }
+  } else res[parentKey] = node;
   return res;
 }
 
@@ -89,5 +106,8 @@ module.exports = {
   getKeys: getKeys,
   isChild: isChild,
   isEmpty: isEmpty,
-  someKey: someKey
+  someKey: someKey,
+  map: map,
+  reduce: reduce,
+  flatten: flatten
 };

@@ -43,7 +43,7 @@ describe('TEST: bot /help command', () => {
         + '\n/remind -- Set reminder with message'
         + '\n  Example: /remind_time_00h00m03s_message_some_crap';
 
-  it('should response\n"' + expectedText + '"\nand clean state', () => {
+  it('should response help for all commands and clean state', () => {
     user.sendMsg = text => { respText = text; }
     user.handleMsg({text: '/help some crap', from: {}, chat: {}});
     assert.equal(respText, expectedText);

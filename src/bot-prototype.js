@@ -14,33 +14,18 @@ module.exports = {
     };
     this.users = {};
 
-    this.add('help', 'List of all commands', {}, (values, onResult) => {
-      const walk = (node, parentKey) => {
-        let resp = '';
-        switch (typeof node) {
-          case 'string':
-          return `\n${parentKey.slice(0, -1)} -- ${node}`;
-          break;
-
-          case 'object':
-          if (node == null) break;
-          for (let key in node) {
-            if (node.hasOwnProperty(key)) {
-              resp += walk(node[key], `${parentKey}${key}_`);
-            }
-          }
-          return resp;
-
-          default:
-          onResult('Something is bad.');
-          throw new Error('Error: helpText node is not string or object.');
-        }
-      };
+    this.add('help', 'List of all commands', {}, (values, onResult, onError) => {
       const node = tree.get(this.actions.helpText);
-      const resp = 'List of all commands'
-            + '\n(you can use spaces instead of underscores)'
-            + ((node) ? walk(node, '/') : 'Something is bad.');
-      onResult(resp);
+      if (node) {
+        let resp = 'List of all commands\n(you can use spaces instead of underscores)';
+        const flatten = tree.flatten(node, '/', (parentKey, key) => `${parentKey}${key}_`);
+        const mapped = tree.map(flatten, '', (key, value) => `${key.slice(0, -1)} -- ${value}`);
+        resp += tree.reduce(mapped, '', '', (key1, str1, key2, str2) => str1 + '\n' + str2);
+        onResult(resp);
+      } else {
+        onResult('Something is bad.');
+        onError(new Error('Help text is missing.'));
+      }
     });
 
     this.add('exit', 'Stop current action', {}, (values, onResult) => {
@@ -68,7 +53,7 @@ module.exports = {
       this.users[userId] = user;
     });
 
-    console.log('Improved bot started');
+    console.log('Bot started');
   },
 
   add(path, helpText, params, body) {

@@ -125,7 +125,7 @@ module.exports = {
 
     if (!this.noWords() && this.isParam(path)) {
       this.words.shift();
-      this.param = word;
+      this.param = word.replace('/', '');
     } else {
       this.state.push('requestValue');
     }
@@ -134,7 +134,8 @@ module.exports = {
   isParam(path) { return !tree.isEmpty(this.actions.params, path); },
 
   handleValue() {
-    const value = this.words[0];
+    let value = this.words[0]
+    if (!this.noWords()) value = value.replace('/', '');
     const needRaw = tree.get(this.actions.params, `${this.path}/${this.param}/needRawText`);
 
     if (!this.noWords() && this.isValue(value) && needRaw) {
@@ -164,6 +165,13 @@ module.exports = {
     if (key) {
       this.param = key;
       resp = params[key].requestText;
+      if (Array.isArray(params[key].exampleValues)
+          && params[key].exampleValues.length >= 1) {
+        resp += '\nFor example, '
+          + params[key].exampleValues
+          .map(item => '/' + item)
+          .join(' ');
+      }
     }
     this.state.swap('disableUpdating');
     this.sendMsg(resp);

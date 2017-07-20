@@ -14,7 +14,8 @@ module.exports = (token, options) => {
             time: {
               type: 'string',
               pred: str => /^(\d?\dh)?(\d?\dm)?(\d?\ds)?$/.test(str),
-              requestText: 'Please send time interval (Example: /00h00m03s)'
+              requestText: 'Please send time interval',
+              exampleValues: ['1s', '00h2s', '01m', '00h00m03s']
             },
             message: {
               type: 'number',
@@ -42,29 +43,33 @@ module.exports = (token, options) => {
             from: {
               type: 'string',
               pred: value => /\b([a-z]{3})\b/i.test(value),
-              requestText: 'Please send "from" currency (three letter code)'
+              requestText: 'Please send "from" currency (three letter code)',
+              exampleValues: ['usd', 'eur', 'rub']
             },
             to: {
               type: 'string',
               pred: value => /\b([a-z]{3})\b/i.test(value),
-              requestText: 'Please send "to" currency (three letter code)'
+              requestText: 'Please send "to" currency (three letter code)',
+              exampleValues: ['usd', 'eur', 'rub']
             },
             amount: {
               type: 'number',
               pred: value => /\b(\d+(\.\d+)?)\b/.test(value),
-              requestText: 'Please send amount (number)'
+              requestText: 'Please send amount (number)',
+              exampleValues: ['1', '10', '100', '1000']
             }
           },
           (values, onResult, onError) => {
             const amount = Number(values.amount);
-            const fromto = values.from + values.to;
-            if (amount === 0) onResult(`${amount} ${values.from} is ${amount} ${values.to}`);
-            // else if ()
+            const from = values.from.toUpperCase();
+            const to = values.to.toUpperCase();
+            const fromto = from + to;
+            if (amount === 0 || from === to) onResult(`${amount} ${from} is ${amount} ${to}`);
             else {
               api.getCurrencyRate(fromto).then(
                 rate => {
                   const converted = amount * Number(rate);
-                  const resp = `${values.amount} ${values.from} is ${converted} ${values.to}`;
+                  const resp = `${amount} ${from} is ${converted} ${to}`;
                   onResult(resp);
                 },
                 onError);

@@ -11,7 +11,8 @@ const bot = require('../src/make-bot.js')();
             time: {
               type: 'string',
               pred: str => /^(\d?\dh)?(\d?\dm)?(\d?\ds)?$/.test(str),
-              requestText: 'Please send time interval (Example: /00h00m03s)'
+              requestText: 'Please send time interval',
+              exampleValues: ['1s', '00h2s', '01m', '00h00m03s']
             },
             message: {
               type: 'number',
@@ -77,20 +78,20 @@ describe('TEST: bot dialog handling (via remind action)', () => {
     let respText = '';
     user.sendMsg = text => { respText = text; }
     user.handleMsg({text: '/remind', from: {}, chat: {}});
-    assert.equal(respText, 'Please send time interval (Example: /00h00m03s)');
+    assert.equal(respText, 'Please send time interval\nFor example, /1s /00h2s /01m /00h00m03s');
   });
 
   it('should request time interval', () => {
     let respText = '';
     user.sendMsg = text => { respText = text; }
     user.handleMsg({text: ' some crap fsdf', from: {}, chat: {}});
-    assert.equal(respText, 'Please send time interval (Example: /00h00m03s)');
+    assert.equal(respText, 'Please send time interval\nFor example, /1s /00h2s /01m /00h00m03s');
   });
 
   it('should request reminder message', () => {
     let respText = '';
     user.sendMsg = text => { respText = text; }
-    user.handleMsg({text: '00h2s', from: {}, chat: {}});
+    user.handleMsg({text: '/00h2s', from: {}, chat: {}});
     assert.equal(respText, 'Please send reminder message');
   });
 

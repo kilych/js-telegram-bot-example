@@ -23,7 +23,6 @@ module.exports = {
         resp += tree.reduce(mapped, '', '', (key1, str1, key2, str2) => str1 + '\n' + str2);
         onResult(resp);
       } else {
-        onResult('Something is bad.');
         onError(new Error('Help text is missing.'));
       }
     });

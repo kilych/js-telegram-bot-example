@@ -9,7 +9,12 @@
   "main": "./index.js",
   "scripts": {
     "start": "node ./index.js",
-    "test": "mocha ./test/*.test.js"
+    "test": "mocha ./test/*.test.js",
+    "eslint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kilych/js-telegram-bot-example.git"
   },
   "keywords": [
     "telegram",
@@ -22,6 +27,9 @@
     "node-telegram-bot-api": "^0.27.1"
   },
   "devDependencies": {
-    "mocha": "3.4.2"
+    "mocha": ">=3.4.2",
+    "eslint": ">=4.3.0",
+    "eslint-config-airbnb-base": ">=11.3.0",
+    "eslint-plugin-import": "^2.7.0"
   }
 }

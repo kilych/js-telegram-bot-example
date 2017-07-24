@@ -10,16 +10,19 @@ $ npm i telegram-bot-example --save
 ```
 const botExample = require('telegram-bot-example');
 
-const bot = botExample.makeBot(telegramBotToken);
+const bot = botExample.makeBot(<YOUR TELEGRAM BOT TOKEN>);
 
 bot.start();
 ```
 
 ### Customization
 
+##### Simple reminder
+
 ```Javascript
 bot.add(
-  // Name of the bot action. Namespaces: namespace/subnamespace/action
+  // Name of the bot action. Corresponding chat command: /remind
+  // Namespace support: namespace/subnamespace/action
   'remind',
   // Help string displays to user who chats with bot.
   'Set reminder with message'

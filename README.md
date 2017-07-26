@@ -17,7 +17,7 @@ bot.start();
 
 ### Customization
 
-##### Simple reminder
+##### Add simple reminder
 
 ```Javascript
 bot.add(
@@ -25,17 +25,15 @@ bot.add(
   // Namespace support: namespace/subnamespace/action
   'remind',
   // Help string displays to user who chats with bot.
-  'Set reminder with message'
-  + '\n  Example: /remind_time_00h00m03s_message_some_crap',
-  // Definition of parameters of the action
+  `Set reminder with message
+  Example: /remind_time_00h00m03s_message_some_crap`,
+  // Definition of parameters of the bot action
   {
     time: {
       type: 'string',
-      // Predicate that checks value
       pred: str => /^(\d?\dh)?(\d?\dm)?(\d?\ds)?$/.test(str),
       requestText: 'Please send time interval',
-      // displays to user
-      exampleValues: ['1s', '00h2s', '01m', '00h00m03s']
+      exampleValues: ['1s', '00h2s', '01m', '00h00m03s'],
     },
     message: {
       type: 'number',
@@ -43,8 +41,8 @@ bot.add(
       requestText: 'Please send reminder message',
       // Optional. When true the value of parameter is rest of text of message
       // from user instead of one word.
-      needRawText: true
-    }
+      needRawText: true,
+    },
   },
   (values, onResult, onError) => {
     const resp = `REMINDER: ${values.message}`;
@@ -55,6 +53,5 @@ bot.add(
     const ms = (3600 * hours + 60 * mins + secs) * 1000;
     setTimeout(() => { onResult(resp); }, ms);
     onResult('REMINDER set.');
-    return;
   });
 ```

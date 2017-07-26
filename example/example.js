@@ -7,7 +7,7 @@ module.exports = (token, options) => {
   bot.add(
     'remind',
     `Set reminder with message
-       Example: /remind_time_00h00m03s_message_some_crap`,
+  Example: /remind_time_00h00m03s_message_some_crap`,
     {
       time: {
         type: 'string',

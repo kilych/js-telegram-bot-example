@@ -1,4 +1,4 @@
-const get = require('./get.js');
+const get = require('./get');
 
 const rates = {};
 const actualTime = 30000; // milliseconds

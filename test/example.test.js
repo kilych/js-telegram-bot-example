@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-const userProt = require('../src/user-prototype.js');
-const bot = require('../example/example.js')();
+const userProt = require('../src/user-prototype');
+const bot = require('../example/')();
 
 describe('TEST: example convert currency command', () => {
   const user = Object.create(userProt).init(bot.actions);

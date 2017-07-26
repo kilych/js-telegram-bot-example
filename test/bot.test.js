@@ -1,8 +1,8 @@
 'use strict';
 
 const assert = require('assert');
-const userProt = require('../src/user-prototype.js');
-const bot = require('../src/make-bot.js')();
+const userProt = require('../src/user-prototype');
+const bot = require('../')();
 
 bot.add(
   'remind',

@@ -1,5 +1,5 @@
-const fsm = require('./lib/stack-fsm-prototype.js');
-const tree = require('./lib/object-tree.js');
+const fsm = require('./lib/stack-fsm-prototype');
+const tree = require('./lib/object-tree');
 
 module.exports = {
   init(actions = {}, api = {}) {

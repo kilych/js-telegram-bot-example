@@ -8,9 +8,7 @@ $ npm i telegram-bot-example --save
 ## Usage
 
 ```
-const botExample = require('telegram-bot-example');
-
-const bot = botExample.makeBot(<YOUR TELEGRAM BOT TOKEN>);
+const bot = require('telegram-bot-example')(<YOUR TELEGRAM BOT TOKEN>);
 
 bot.start();
 ```

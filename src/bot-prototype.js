@@ -1,6 +1,6 @@
-const tree = require('./lib/object-tree.js');
+const tree = require('./lib/object-tree');
 const API = require('node-telegram-bot-api');
-const userProt = require('./user-prototype.js');
+const userProt = require('./user-prototype');
 
 module.exports = {
   init(token) {

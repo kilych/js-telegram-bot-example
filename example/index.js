@@ -1,5 +1,5 @@
-const makeBot = require('../src/make-bot.js');
-const api = require('./lib/external-api.js');
+const makeBot = require('../');
+const api = require('./lib/external-api');
 
 module.exports = (token, options) => {
   const bot = makeBot(token);

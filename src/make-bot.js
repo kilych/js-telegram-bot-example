@@ -1,9 +1,3 @@
-'use strict';
+const core = require('./bot-prototype.js');
 
-const core = require(__dirname + '/bot-prototype.js');
-
-module.exports = token => {
-    const bot = Object.create(core).init(token);
-
-    return bot;
-};
+module.exports = token => Object.create(core).init(token);

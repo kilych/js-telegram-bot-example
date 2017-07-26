@@ -1,7 +1,5 @@
-'use strict';
-
-const fsm = require(__dirname + '/lib/stack-fsm-prototype.js');
-const tree = require(__dirname + '/lib/object-tree.js');
+const fsm = require('./lib/stack-fsm-prototype.js');
+const tree = require('./lib/object-tree.js');
 
 module.exports = {
   init(actions = {}, api = {}) {
@@ -85,7 +83,6 @@ module.exports = {
       }
     }
     // this.state.push('requestName'); // should ignore invalid words?
-    return;
   },
 
   isCommand(word) { return word.length >= 2 && word[0] === '/'; },
@@ -102,14 +99,16 @@ module.exports = {
   requestName() {
     let text = 'Please send command';
     const subnames = tree.getKeys(this.actions.functions, this.path);
-    text += (subnames.length >= 1) ? '\n' + subnames.map(item => '/' + item).join(' ') : '';
+    text += (subnames.length >= 1) ? '\n' + subnames.map(item => `/${item}`).join(' ') : '';
     this.state.swap('disableUpdating');
     this.sendMsg(text);
   },
 
   needParam() {
-    if (tree.someKey(this.actions.params, this.path,
-                     key => !this.values.hasOwnProperty(key))) {
+    if (tree.someKey(
+      this.actions.params,
+      this.path,
+      key => !Object.prototype.hasOwnProperty.call(this.values, key))) {
       this.state.push('handleParam');
       return true;
     }
@@ -134,7 +133,7 @@ module.exports = {
   isParam(path) { return !tree.isEmpty(this.actions.params, path); },
 
   handleValue() {
-    let value = this.words[0]
+    let value = this.words[0];
     if (!this.noWords()) value = value.replace('/', '');
     const needRaw = tree.get(this.actions.params, `${this.path}/${this.param}/needRawText`);
 
@@ -158,18 +157,18 @@ module.exports = {
   requestValue() {
     let resp = '';
     const params = tree.get(this.actions.params, this.path);
-    const isFilled = key => this.values.hasOwnProperty(key);
-    const needRaw = key => tree.get(this.actions.params, `${this.path}/key/needRawText`);
-    const key = tree.someKey(params, '', key => !isFilled(key) && !needRaw(key))
+    const isFilled = key => Object.prototype.hasOwnProperty.call(this.values, key);
+    const needRaw = key => tree.get(this.actions.params, `${this.path}/${key}/needRawText`);
+    const param = tree.someKey(params, '', key => !isFilled(key) && !needRaw(key))
           || tree.someKey(params, '', key => !isFilled(key));
-    if (key) {
-      this.param = key;
-      resp = params[key].requestText;
-      if (Array.isArray(params[key].exampleValues)
-          && params[key].exampleValues.length >= 1) {
-        resp += '\nFor example, '
-          + params[key].exampleValues
-          .map(item => '/' + item)
+    if (param) {
+      this.param = param;
+      resp = params[param].requestText;
+      if (Array.isArray(params[param].exampleValues)
+          && params[param].exampleValues.length >= 1) {
+        resp += '\nFor example, ' + params[param]
+          .exampleValues
+          .map(item => `/${item}`)
           .join(' ');
       }
     }
@@ -195,5 +194,5 @@ module.exports = {
   disableUpdating() {
     this.state.disableUpdating();
     this.state.pop();
-  }
+  },
 };

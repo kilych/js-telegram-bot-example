@@ -1,8 +1,6 @@
-'use strict';
-
-const tree = require(__dirname + '/lib/object-tree.js');
+const tree = require('./lib/object-tree.js');
 const API = require('node-telegram-bot-api');
-const userProt = require(__dirname + '/user-prototype.js');
+const userProt = require('./user-prototype.js');
 
 module.exports = {
   init(token) {
@@ -10,7 +8,7 @@ module.exports = {
     this.actions = {
       functions: {},
       helpText: {},
-      params: {}
+      params: {},
     };
     this.users = {};
 
@@ -35,9 +33,9 @@ module.exports = {
   },
 
   start() {
-    this.api = new API(this.token, {polling: true});
+    this.api = new API(this.token, { polling: true });
 
-    this.api.on('message', msg => {
+    this.api.on('message', (msg) => {
       // console.log('>>>\n' + JSON.stringify(msg, null, 2) + '\n<<<');
       let user = {};
       const userId = msg.from.id;
@@ -62,8 +60,8 @@ module.exports = {
   },
 
   makeUser() {
-    let user = Object.create(userProt);
+    const user = Object.create(userProt);
     user.init(this.actions, this.api);
     return user;
-  }
+  },
 };

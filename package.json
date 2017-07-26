@@ -7,6 +7,7 @@
     "npm": ">=4.5.0"
   },
   "main": "./index.js",
+  "bin": { "tgbot-example": "./bin/example.js" },
   "scripts": {
     "start": "node ./index.js",
     "test": "mocha ./test/*.test.js",
